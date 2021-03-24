@@ -26,6 +26,7 @@ autosense::ROIParams params_roi_;
 ros::Subscriber pointcloud_sub_;
 // ROS Publisher
 ros::Publisher pcs_segmented_pub_;
+ros::Publisher ground_pub_;
 /// @note Core components
 boost::shared_ptr<autosense::segmenter::BaseSegmenter> ground_remover_;
 boost::shared_ptr<autosense::segmenter::BaseSegmenter> segmenter_;
@@ -53,6 +54,8 @@ void OnPointCloud(const sensor_msgs::PointCloud2ConstPtr &ros_pc2) {
     *cloud_ground = *cloud_clusters[0];
     *cloud_nonground = *cloud_clusters[1];
 
+    autosense::common::publishCloud<autosense::PointI>(ground_pub_, header, *cloud_ground);
+
     // reset clusters
     cloud_clusters.clear();
     segmenter_->segment(*cloud_nonground, cloud_clusters);
@@ -74,12 +77,14 @@ int main(int argc, char **argv) {
     /// @brief Load ROS parameters from rosparam server
     private_nh.getParam(param_ns_prefix_ + "/frame_id", frame_id_);
 
-    std::string sub_pc_topic, pub_pcs_segmented_topic;
+    std::string sub_pc_topic, pub_pcs_segmented_topic, pub_pc_ground_topic;
     int sub_pc_queue_size;
     private_nh.getParam(param_ns_prefix_ + "/sub_pc_topic", sub_pc_topic);
 
     private_nh.getParam(param_ns_prefix_ + "/sub_pc_queue_size",
                         sub_pc_queue_size);
+    private_nh.getParam(param_ns_prefix_ + "/pub_pc_ground_topic",
+                        pub_pc_ground_topic);                        
     private_nh.getParam(param_ns_prefix_ + "/pub_pcs_segmented_topic",
                         pub_pcs_segmented_topic);
 
@@ -105,6 +110,9 @@ int main(int argc, char **argv) {
     param.segmenter_type = non_ground_segmenter_type;
     segmenter_ = autosense::segmenter::createNonGroundSegmenter(param);
 
+    ground_pub_ =
+            nh.advertise<sensor_msgs::PointCloud2>(pub_pc_ground_topic, 1);
+    
     pcs_segmented_pub_ = nh.advertise<autosense_msgs::PointCloud2Array>(
         pub_pcs_segmented_topic, 1);
 
