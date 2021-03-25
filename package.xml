@@ -36,13 +36,15 @@
   <!--   Note that this is equivalent to the following: -->
   <!--   <build_depend>roscpp</build_depend> -->
   <!--   <exec_depend>roscpp</exec_depend> -->
-  <build_depend>common_lib</build_depend>
+  <depend>common_lib</depend>
+  <depend>pcl_conversions</depend>
+  <depend>pcl_ros</depend>
   <!-- depend ony for example -->
-  <build_depend>roi_filters_lib</build_depend>
+  <depend>roi_filters_lib</depend>
   <depend>feature_extractors_lib</depend>
   <depend>object_builders_lib</depend>
   <!-- depend only for example -->
-  <exec_depend>segmenters_lib</exec_depend>
+  <depend>segmenters_lib</depend>
   <!--   <build_depend>message_generation</build_depend> -->
   <!-- Use build_export_depend for packages you need in order to build against this package: -->
   <!--   <build_export_depend>message_generation</build_export_depend> -->

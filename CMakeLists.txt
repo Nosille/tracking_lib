@@ -13,6 +13,8 @@ find_package(catkin REQUIRED COMPONENTS
     roscpp
     # 3rd modules for ROS, like Eigen
     cmake_modules
+    pcl_conversions
+    pcl_ros
     # local packages
     common_lib
     feature_extractors_lib
@@ -21,7 +23,7 @@ find_package(catkin REQUIRED COMPONENTS
 
 ## System dependencies are found with CMake's conventions
 ### PCL
-find_package(PCL 1.10.1 REQUIRED COMPONENTS
+find_package(PCL REQUIRED COMPONENTS
     common
     io
     filters
@@ -29,7 +31,7 @@ find_package(PCL 1.10.1 REQUIRED COMPONENTS
     segmentation
 )
 add_definitions(${PCL_DEFINITIONS})
-link_directories(${PCL_LIBRARY_DIRS})
+#link_directories(${PCL_LIBRARY_DIRS})
 ### Eigen
 find_package(Eigen3 REQUIRED)
 
